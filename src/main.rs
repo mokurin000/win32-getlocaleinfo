@@ -8,6 +8,9 @@ use windows::Win32::Globalization::{
     LOCALE_USER_DEFAULT,
 };
 
+/// returns:
+/// - empty string on failure
+/// - expected lctype result on success
 fn get_locale_info(lctype: u32) -> String {
     let mut buf = vec![0u8; 85];
     let return_code = unsafe { GetLocaleInfoA(LOCALE_USER_DEFAULT, lctype, Some(&mut buf)) };
@@ -16,6 +19,9 @@ fn get_locale_info(lctype: u32) -> String {
     String::from_utf8_lossy(&buf).into_owned()
 }
 
+/// returns:
+/// - empty string on failure
+/// - RFC 1766 locale name on success
 fn get_user_default_locale_name() -> String {
     let mut buf = vec![0_u16; 85];
     let return_code = unsafe { GetUserDefaultLocaleName(&mut buf) };
@@ -25,6 +31,14 @@ fn get_user_default_locale_name() -> String {
         .into_owned()
 }
 
+/// returns BCP-47 language code on success.
+fn globalization_preference() -> Result<String, Box<dyn Error + Send + Sync>> {
+    Ok(GlobalizationPreferences::Languages()?
+        .First()?
+        .Current()?
+        .to_string())
+}
+
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     println!("ISO 639: {}", get_locale_info(LOCALE_SISO639LANGNAME),);
     println!("ISO 3166: {}", get_locale_info(LOCALE_SISO3166CTRYNAME),);
@@ -32,10 +46,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         "GetUserDefaultLocaleName: {}",
         get_user_default_locale_name()
     );
-    println!(
-        "GlobalizationPreferences: {}",
-        GlobalizationPreferences::Languages()?.First()?.Current()?
-    );
+    println!("GlobalizationPreferences: {}", globalization_preference()?);
 
     Ok(())
 }
