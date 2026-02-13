@@ -22,7 +22,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 windows = { version = "0.62.2", features = [] }
 
 [features]
-default = ["global-pref"]
+default = ["global-pref", "legacy-methods"]
 
 legacy-methods = [
     "windows/Win32_Globalization",
