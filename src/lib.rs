@@ -1,3 +1,4 @@
+#![doc = include_str!("../README.md")]
 #![cfg_attr(feature = "nightly", feature(doc_cfg))]
 
 #[cfg(feature = "global-pref")]
@@ -14,7 +15,7 @@ use windows::Win32::System::SystemServices::LOCALE_NAME_MAX_LENGTH;
 ///
 /// returns:
 /// - empty string on failure
-/// - rfc 1766 locale name on success
+/// - RFC 1766 locale name on success
 #[cfg(feature = "legacy-methods")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "legacy-methods")))]
 pub fn get_locale_lcid() -> String {
@@ -35,7 +36,12 @@ pub fn get_locale_lcid() -> String {
 
 /// Available since Windows 2000
 ///
-/// returns:
+/// You may want to pass [`LOCALE_SISO639LANGNAME`](https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Globalization/constant.LOCALE_SISO639LANGNAME.html)
+/// or [`LOCALE_SISO3166CTRYNAME`](https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Globalization/constant.LOCALE_SISO3166CTRYNAME.html),
+///
+/// for ISO 639-1 language code and ISO 3166 region code.
+///
+/// Returns:
 /// - empty string on failure
 /// - expected lctype result on success
 #[cfg(feature = "legacy-methods")]
