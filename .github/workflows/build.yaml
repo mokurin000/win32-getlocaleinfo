@@ -38,7 +38,7 @@ jobs:
     needs: create-release
     runs-on: ${{ matrix.os }}
     env:
-      RUST_BIN_NAME: "win32-getlocaleinfo"
+      RUST_BIN_NAME: "win32-locale-info"
     strategy:
       fail-fast: false
       matrix:
