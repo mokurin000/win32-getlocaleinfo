@@ -1,3 +1,5 @@
+#![cfg_attr(feature = "nightly", feature(doc_cfg))]
+
 #[cfg(feature = "global-pref")]
 use std::error::Error;
 #[cfg(feature = "legacy-methods")]
@@ -14,6 +16,7 @@ use windows::Win32::System::SystemServices::LOCALE_NAME_MAX_LENGTH;
 /// - empty string on failure
 /// - rfc 1766 locale name on success
 #[cfg(feature = "legacy-methods")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "legacy-methods")))]
 pub fn get_locale_lcid() -> String {
     use windows::Win32::Globalization::{LCIDToLocaleName, LOCALE_USER_DEFAULT};
 
@@ -36,6 +39,7 @@ pub fn get_locale_lcid() -> String {
 /// - empty string on failure
 /// - expected lctype result on success
 #[cfg(feature = "legacy-methods")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "legacy-methods")))]
 pub fn get_locale_info(lctype: u32) -> String {
     let mut buf = vec![0_u16; LOCALE_NAME_MAX_LENGTH as _];
     let return_code = unsafe {
@@ -56,6 +60,7 @@ pub fn get_locale_info(lctype: u32) -> String {
 /// - empty string on failure
 /// - RFC 1766 locale name on success
 #[cfg(feature = "legacy-methods")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "legacy-methods")))]
 pub fn get_user_default_locale_name() -> String {
     let mut buf = vec![0_u16; LOCALE_NAME_MAX_LENGTH as _];
     let return_code = unsafe {
@@ -73,6 +78,7 @@ pub fn get_user_default_locale_name() -> String {
 ///
 /// returns BCP-47 language code on success.
 #[cfg(feature = "global-pref")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "global-pref")))]
 pub fn globalization_preference() -> Result<String, Box<dyn Error + Send + Sync>> {
     use windows::System::UserProfile::GlobalizationPreferences;
 

@@ -7,6 +7,7 @@ use windows::Win32::Globalization::{GetACP, LOCALE_SISO639LANGNAME, LOCALE_SISO3
 use win32_getlocaleinfo::{get_locale_info, get_locale_lcid, get_user_default_locale_name};
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
+    #[cfg(feature = "legacy-methods")]
     println!("Encoding: cp{}", unsafe { GetACP() });
 
     #[cfg(feature = "legacy-methods")]
