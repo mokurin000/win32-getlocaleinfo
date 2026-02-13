@@ -1,52 +1,33 @@
 use std::error::Error;
-use std::ffi::OsString;
-use std::os::windows::ffi::OsStringExt;
 
-use windows::System::UserProfile::GlobalizationPreferences;
-use windows::Win32::Globalization::{
-    GetLocaleInfoA, GetUserDefaultLocaleName, LOCALE_SISO639LANGNAME, LOCALE_SISO3166CTRYNAME,
-    LOCALE_USER_DEFAULT,
-};
+#[cfg(feature = "legacy-methods")]
+use windows::Win32::Globalization::{GetACP, LOCALE_SISO639LANGNAME, LOCALE_SISO3166CTRYNAME};
 
-/// returns:
-/// - empty string on failure
-/// - expected lctype result on success
-fn get_locale_info(lctype: u32) -> String {
-    let mut buf = vec![0u8; 85];
-    let return_code = unsafe { GetLocaleInfoA(LOCALE_USER_DEFAULT, lctype, Some(&mut buf)) };
-    buf.truncate(return_code as _);
-
-    String::from_utf8_lossy(&buf).into_owned()
-}
-
-/// returns:
-/// - empty string on failure
-/// - RFC 1766 locale name on success
-fn get_user_default_locale_name() -> String {
-    let mut buf = vec![0_u16; 85];
-    let return_code = unsafe { GetUserDefaultLocaleName(&mut buf) };
-    buf.truncate(return_code as _);
-    OsString::from_wide(&buf[..buf.len() - 1])
-        .to_string_lossy()
-        .into_owned()
-}
-
-/// returns BCP-47 language code on success.
-fn globalization_preference() -> Result<String, Box<dyn Error + Send + Sync>> {
-    Ok(GlobalizationPreferences::Languages()?
-        .First()?
-        .Current()?
-        .to_string())
-}
+#[cfg(feature = "legacy-methods")]
+use win32_getlocaleinfo::{get_locale_info, get_locale_lcid, get_user_default_locale_name};
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
+    println!("Encoding: cp{}", unsafe { GetACP() });
+
+    #[cfg(feature = "legacy-methods")]
     println!("ISO 639: {}", get_locale_info(LOCALE_SISO639LANGNAME),);
+    #[cfg(feature = "legacy-methods")]
     println!("ISO 3166: {}", get_locale_info(LOCALE_SISO3166CTRYNAME),);
+
+    #[cfg(feature = "legacy-methods")]
     println!(
         "GetUserDefaultLocaleName: {}",
         get_user_default_locale_name()
     );
-    println!("GlobalizationPreferences: {}", globalization_preference()?);
+
+    #[cfg(feature = "legacy-methods")]
+    println!("Locale from LCID: {}", get_locale_lcid());
+
+    #[cfg(feature = "global-pref")]
+    println!(
+        "GlobalizationPreferences: {}",
+        win32_getlocaleinfo::globalization_preference()?
+    );
 
     Ok(())
 }

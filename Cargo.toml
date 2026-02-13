@@ -4,7 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-windows = { version = "0.62.2", features = [
-    "System_UserProfile",
-    "Win32_Globalization",
-] }
+windows = { version = "0.62.2", features = [] }
+
+[features]
+default = ["legacy-methods", "global-pref"]
+legacy-methods = [
+    "windows/Win32_Globalization",
+    "windows/Win32_System_SystemServices",
+]
+global-pref = ["windows/System_UserProfile"]
