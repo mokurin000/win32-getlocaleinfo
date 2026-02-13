@@ -1,7 +1,10 @@
 [package]
-name = "win32-getlocaleinfo"
+name = "win32-locale-info"
 version = "0.1.0"
 edition = "2024"
+authors = ["mokurin000"]
+license = "MIT"
+description = "Get RFC 1766 / BCP-47 language code on Windows"
 
 [dependencies]
 windows = { version = "0.62.2", features = [] }

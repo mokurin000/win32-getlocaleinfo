@@ -4,7 +4,7 @@ use std::error::Error;
 use windows::Win32::Globalization::{GetACP, LOCALE_SISO639LANGNAME, LOCALE_SISO3166CTRYNAME};
 
 #[cfg(feature = "legacy-methods")]
-use win32_getlocaleinfo::{get_locale_info, get_locale_lcid, get_user_default_locale_name};
+use win32_locale_info::{get_locale_info, get_locale_lcid, get_user_default_locale_name};
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     #[cfg(feature = "legacy-methods")]
@@ -27,7 +27,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     #[cfg(feature = "global-pref")]
     println!(
         "GlobalizationPreferences: {}",
-        win32_getlocaleinfo::globalization_preference()?
+        win32_locale_info::globalization_preference()?
     );
 
     Ok(())
